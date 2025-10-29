@@ -1,0 +1,10 @@
+{
+  "name": "telegram-api",
+  "version": "1.0.0",
+  "description": "Telegram API для отправки сообщений",
+  "type": "module",
+  "dependencies": {
+    "node-fetch": "^3.3.0"
+  }
+}
+
