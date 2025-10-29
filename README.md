@@ -1,6 +1,9 @@
-# Telegram API для сайта УютСтрой72
+# API для сайта УютСтрой72 (Telegram + Бронирования + Отзывы)
 
-Serverless функция на Vercel для отправки сообщений в Telegram.
+Serverless функции на Vercel для работы сайта:
+- 📧 Отправка сообщений в Telegram
+- 📅 Управление бронированиями
+- ⭐ Управление отзывами
 
 ## 🚀 Деплой на Vercel
 
@@ -25,18 +28,42 @@ vercel
 
 Вы получите URL вида: `https://your-project.vercel.app`
 
-### API Endpoint:
+### API Endpoints:
 ```
-POST https://your-project.vercel.app/api/telegram
+POST   /api/telegram  - Отправка в Telegram
+GET    /api/bookings  - Получить бронирования
+POST   /api/bookings  - Создать бронирование
+DELETE /api/bookings  - Удалить бронирование
+GET    /api/reviews   - Получить отзывы
+POST   /api/reviews   - Создать отзыв
+DELETE /api/reviews   - Удалить отзыв
 ```
 
-### Пример запроса:
+### Примеры запросов:
+
+**Отправка в Telegram:**
 ```javascript
 fetch('https://your-project.vercel.app/api/telegram', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ message: 'Текст сообщения' })
+})
+```
+
+**Получить бронирования:**
+```javascript
+fetch('https://your-project.vercel.app/api/bookings')
+```
+
+**Создать бронирование:**
+```javascript
+fetch('https://your-project.vercel.app/api/bookings', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    message: 'Текст сообщения'
+    name: 'Иван Иванов',
+    phone: '+79001234567',
+    date: '2025-11-01'
   })
 })
 ```
@@ -71,8 +98,15 @@ await fetch('https://your-project.vercel.app/api/telegram', { ... })
 ## 📝 После деплоя
 
 Замените в вашем сайте на reg.ru:
-1. В `index.html` найдите все `await fetch('/api/telegram'`
-2. Замените на `await fetch('https://ВАШ-ПРОЕКТ.vercel.app/api/telegram'`
-3. Загрузите обновленный HTML на reg.ru
+1. В `index.html`, `manage_bookings.html`, `manage_reviews.html` найдите все `/api/telegram`, `/api/bookings`, `/api/reviews`
+2. Замените на `https://ВАШ-ПРОЕКТ.vercel.app/api/...`
+3. Загрузите обновленные файлы на reg.ru
 4. Готово! ✅
+
+## 💾 Хранение данных
+
+- **Без Vercel KV**: Данные хранятся в памяти (сбрасываются при перезапуске функции)
+- **С Vercel KV** (опционально): Постоянное хранилище
+  
+Для бесплатного использования достаточно хранения в памяти!
 

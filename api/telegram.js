@@ -30,6 +30,9 @@ export default async function handler(req, res) {
         // Отправка напрямую в Telegram API с UTF-8
         const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
         
+        // Определяем, содержит ли сообщение HTML теги
+        const hasHtmlTags = /<[^>]+>/.test(message);
+        
         const response = await fetch(telegramUrl, {
             method: 'POST',
             headers: {
@@ -38,7 +41,8 @@ export default async function handler(req, res) {
             body: JSON.stringify({
                 chat_id: chatId,
                 text: message,
-                parse_mode: 'HTML'
+                // Используем HTML режим только если есть HTML теги
+                ...(hasHtmlTags && { parse_mode: 'HTML' })
             })
         });
 
