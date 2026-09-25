@@ -22,9 +22,15 @@ export default async function handler(req, res) {
         return res.status(400).json({ success: false, error: 'Message is required' });
     }
 
-    // Ваши данные бота
-    const botToken = '8050200832:AAH5ScyG__5FCxX9_nEDdU0QrRCGvXlIU58';
-    const chatId = '-1003143740246';
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
+
+    if (!botToken || !chatId) {
+        return res.status(503).json({
+            success: false,
+            error: 'Telegram integration is not configured'
+        });
+    }
 
     try {
         // Отправка напрямую в Telegram API с UTF-8
@@ -33,11 +39,15 @@ export default async function handler(req, res) {
         // Определяем, содержит ли сообщение HTML теги
         const hasHtmlTags = /<[^>]+>/.test(message);
         
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 8000);
+
         const response = await fetch(telegramUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json; charset=utf-8',
             },
+            signal: controller.signal,
             body: JSON.stringify({
                 chat_id: chatId,
                 text: message,
@@ -46,6 +56,7 @@ export default async function handler(req, res) {
             })
         });
 
+        clearTimeout(timeout);
         const data = await response.json();
 
         if (data.ok) {
@@ -62,8 +73,9 @@ export default async function handler(req, res) {
     } catch (error) {
         return res.status(500).json({ 
             success: false, 
-            error: error.message || 'Internal server error' 
+            error: error.name === 'AbortError'
+                ? 'Telegram service did not respond in time'
+                : (error.message || 'Internal server error')
         });
     }
 }
-

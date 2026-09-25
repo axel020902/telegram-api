@@ -90,10 +90,10 @@ await fetch('https://your-project.vercel.app/api/telegram', { ... })
 - ✅ Быстро и надежно
 - ✅ Не нужен отдельный прокси-сервер
 
-## 🆔 Данные бота
+## 🆔 Настройка Telegram
 
-- **Bot Token:** 8050200832:AAH5ScyG__5FCxX9_nEDdU0QrRCGvXlIU58
-- **Chat ID:** -1003143740246
+Добавьте в настройках окружения Vercel переменные `TELEGRAM_BOT_TOKEN` и
+`TELEGRAM_CHAT_ID`. Не храните эти значения в исходном коде или документации.
 
 ## 📝 После деплоя
 
@@ -109,4 +109,3 @@ await fetch('https://your-project.vercel.app/api/telegram', { ... })
 - **С Vercel KV** (опционально): Постоянное хранилище
   
 Для бесплатного использования достаточно хранения в памяти!
-
